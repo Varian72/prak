@@ -28,7 +28,8 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 
-
+global N
+N = 1
 
 class Ui_Form(object):
 
@@ -51,17 +52,36 @@ class Ui_Form(object):
 
     def retranslateUi(self, Form):
         Form.setWindowTitle(_translate("Form", "Form", None))
-        self.pushButton.setText(_translate("Form", "Ok", None))
+        self.pushButton.setText(_translate("Form", "Set value", None))
         #self.pushButton.clicked.connect(self.close)
-        self.pushButton.connect(self.close)
+        self.pushButton.clicked.connect(self.OK)
         self.label.setText(_translate("Form", "choose n:", None))
 
 
 
 
-    def OK(self):
-        print("ok")
-        #self.close()
+    def OK(self, event):
+        #value = [int(item) for item in self.spinBox.value()]
+        global N
+        value =  self.spinBox.value()
+        N = value
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Information)
+        stringer= str("You succesfully choose N=" + str(N))
+        msg.setText(stringer)
+        msg.setInformativeText("This value set how much items will be in interval")
+        msg.setWindowTitle("Changed  N !!!!")
+        msg.setAttribute(QtCore.Qt.WA_DeleteOnClose)
+
+        msg.setStandardButtons(QMessageBox.Ok )
+        msg.exec_()
+        #msg.buttonClicked.connect(msgbtn)
+
+
+
+        #popup = QDialog()
+        #popup.ui = Ui_Form()
+
 
 
 
@@ -84,7 +104,8 @@ class Ui_MainWindow(object):
 
     #general
     filename = ""
-    N = 1
+    global N
+    n = N
     popup = ""
 
     def setupUi(self, MainWindow):
@@ -201,7 +222,7 @@ class Ui_MainWindow(object):
         self.tabWidget.addTab(self.tab, _fromUtf8(""))
         self.tab_2 = QtGui.QWidget()
         self.tab_2.setObjectName(_fromUtf8("tab_2"))
-        self.tabWidget.addTab(self.tab_2, _fromUtf8(""))
+        #self.tabWidget.addTab(self.tab_2, _fromUtf8(""))
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 25))
@@ -277,7 +298,7 @@ class Ui_MainWindow(object):
         self.pushButton_3.clicked.connect(self.buildGrahTab4)
         self.tabWidget_2.setTabText(self.tabWidget_2.indexOf(self.tab_6), _translate("MainWindow", "New Symbols", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", "New Symbols", None))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("MainWindow", "F=", None))
+        #self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("MainWindow", "F=", None))
         self.menuFile.setTitle(_translate("MainWindow", "File", None))
         self.actionOpen.setText(_translate("MainWindow", "Open", None))
         self.actionOpen.triggered.connect(self.openDialog)
@@ -311,13 +332,16 @@ class Ui_MainWindow(object):
         self.popup.ui.setupUi(self.popup)
         self.popup.setAttribute(QtCore.Qt.WA_DeleteOnClose)
         self.popup.exec_()
+        global N
+        self.n = N
+        print(self.n)
 
 
     #this function split text into n-gramms and run waterflow functions which
     # fill tables
     def splitText(self, text):
         self.open_n_Popup()
-        splittedText = textwrap.wrap(text, self.N)
+        splittedText = textwrap.wrap(text, self.n)
         self.readyText = splittedText
         #here caled waterflow functions for tab1
         self.table1()
@@ -567,25 +591,23 @@ class Ui_MainWindow(object):
         if self.radioButton_5.isChecked():
             #calc sum of new symbols/ngrams again
             result = []
+            resultin = []
             for index in range(len(self.chunkedText)):
                 summary = 0
                 for item in self.chunkedText[index]:
                     if item:
                         summary+=1
-                if summary != 0:
-                    result.append(summary)
+                result.append(summary)
+                resultin.append(index)
             counts = Counter(result)
-            values, labels = zip(*counts.items())
-            # sort your values in descending order
-            indSort = np.argsort(values)[::-1]
-            # rearrange your data
-            labels = np.array(labels)[indSort]
-            values = np.array(values)[indSort]
-            indexes = np.arange(len(labels))
+            print(result)
+            #labels, values = zip(*counts.items())
+
+            #indexes = np.arange(len(labels))
             bar_width = 0.35
-            plt.bar(indexes, values)
+            plt.bar(resultin, result, width = bar_width)
             # add labels
-            plt.xticks(indexes + bar_width, labels)
+            #plt.xticks(indexes + bar_width, labels)
             plt.show()
         elif self.radioButton_4.isChecked():
             iteration_x = []
@@ -594,7 +616,6 @@ class Ui_MainWindow(object):
                 iteration_x.append(i)
             x = iteration_x
             y = iteration_y
-            print(len(x), len(y))
 
             plt.plot(x, y, 'k')
             plt.grid(color='b', linestyle='-', linewidth=0.5)
