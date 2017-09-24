@@ -24,8 +24,10 @@ for building, please, use pyinstaller.
 To get this from git hub, use:
   1. clone from https://github.com/Varian72/prak
   2. install modules (describe Above) via pip or other tools
-  3. Have fun: to develop go to directory, than use python(check if this command run right version)
-    "python praktyka.py"
+  3. Have fun:
+    a. To develop go to directory, than use python(check if this command run right version)
+      "python praktyka.py"
+    b. To just run, go to ./dist and run "praktyka.exe" 
 
 
 
