@@ -9,7 +9,6 @@ import textwrap
 
 from collections import Counter
 import numpy as np
-from sklearn.neighbors.kde import KernelDensity
 import matplotlib.pyplot as plt
 
 

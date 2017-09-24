@@ -58,8 +58,8 @@ missing module named 'multiprocessing.spawn' - imported by /home/ros/.local/lib/
 missing module named _dummy_threading - imported by dummy_threading
 missing module named _xmlrpclib - imported by xmlrpclib
 missing module named 'matplotlib.externals.six.moves' - imported by matplotlib.cbook, matplotlib.finance, matplotlib.dates, matplotlib.hatch, matplotlib.collections, matplotlib.colors, matplotlib.patches, matplotlib.backend_bases, matplotlib.widgets, matplotlib.mlab, matplotlib.contour, matplotlib.font_manager, matplotlib.afm, matplotlib.text, matplotlib.markers, matplotlib.textpath, matplotlib.image, matplotlib.colorbar, matplotlib.gridspec, matplotlib.axes._subplots, matplotlib.axes._axes, matplotlib.legend, matplotlib.offsetbox, matplotlib.legend_handler, matplotlib.stackplot, matplotlib.streamplot, matplotlib.table, matplotlib.axes._base, matplotlib.dviread, matplotlib.backends.backend_svg, matplotlib.tri.triinterpolate, matplotlib, matplotlib.backends.qt_editor.formlayout, matplotlib.backends.backend_tkagg, matplotlib.backends.tkagg, matplotlib.backends.backend_ps
-missing module named numpy.linalg.inv - imported by numpy.linalg, numpy.matrixlib.defmatrix, numpy.lib.polynomial, scipy.linalg._solvers, matplotlib.transforms
-missing module named numpy.eye - imported by numpy, numpy.core.numeric, scipy.misc.common, scipy.optimize.optimize, scipy.optimize.minpack
+missing module named numpy.linalg.inv - imported by numpy.linalg, numpy.matrixlib.defmatrix, numpy.lib.polynomial, matplotlib.transforms
+missing module named numpy.eye - imported by numpy, numpy.core.numeric
 missing module named builtins.bool - imported by builtins, numpy.core.numerictypes, numpy.lib._iotools, numpy
 missing module named builtins.complex - imported by builtins, numpy.core.numerictypes, numpy.lib._iotools, numpy
 missing module named builtins.float - imported by builtins, numpy.core.numerictypes, numpy.lib._iotools, numpy
@@ -76,18 +76,18 @@ missing module named numpy.core.number - imported by numpy.core, numpy.testing.u
 missing module named numpy.lib.iscomplexobj - imported by numpy.lib, numpy.testing.utils
 missing module named numpy.lib.imag - imported by numpy.lib, numpy.testing.utils
 missing module named numpy.lib.real - imported by numpy.lib, numpy.testing.utils
-missing module named numpy.ndarray - imported by numpy, numpy.ma.core, numpy.ma.extras, numpy.ma.mrecords, numpy.ctypeslib, scipy.stats._distn_infrastructure, scipy.stats.mstats_basic, scipy.stats.mstats_extras
+missing module named numpy.ndarray - imported by numpy, numpy.ma.core, numpy.ma.extras, numpy.ma.mrecords, numpy.ctypeslib
 missing module named numpy.recarray - imported by numpy, numpy.ma.mrecords
-missing module named numpy.array - imported by numpy, numpy.ma.core, numpy.ma.extras, numpy.ma.mrecords, numpy.ctypeslib, scipy.sparse.linalg.isolve.utils, scipy.linalg.decomp, scipy.misc.common, scipy.misc.pilutil, scipy.stats.stats, scipy.optimize.lbfgsb, scipy.optimize.tnc, scipy.optimize.slsqp, scipy.optimize.minpack, scipy.integrate._ode, scipy.stats.morestats
+missing module named numpy.array - imported by numpy, numpy.ma.core, numpy.ma.extras, numpy.ma.mrecords, numpy.ctypeslib
 missing module named numpy.bool_ - imported by numpy, numpy.ma.core, numpy.ma.mrecords
-missing module named numpy.dtype - imported by numpy, numpy.ma.mrecords, numpy.ctypeslib, scipy.optimize.minpack
+missing module named numpy.dtype - imported by numpy, numpy.ma.mrecords, numpy.ctypeslib
 missing module named 'urllib.error' - imported by numpy.lib._datasource
 missing module named 'urllib.request' - imported by numpy.lib._datasource
-missing module named 'urllib.parse' - imported by numpy.lib._datasource, setuptools.py26compat, setuptools.package_index, sklearn.externals.joblib.func_inspect
+missing module named 'urllib.parse' - imported by numpy.lib._datasource, setuptools.py26compat, setuptools.package_index
 missing module named numpy.histogramdd - imported by numpy, numpy.lib.twodim_base
 missing module named numpy.core.integer - imported by numpy.core, numpy.fft.helper
 missing module named numpy.core.conjugate - imported by numpy.core, numpy.fft.fftpack
-missing module named numpy.core.sqrt - imported by numpy.core, numpy.fft.fftpack, numpy.linalg.linalg, scipy.sparse.linalg._norm
+missing module named numpy.core.sqrt - imported by numpy.core, numpy.fft.fftpack, numpy.linalg.linalg
 missing module named numpy.lib.i0 - imported by numpy.lib, numpy.dual
 missing module named numpy.lib.triu - imported by numpy.lib, numpy.linalg.linalg
 missing module named numpy.core.signbit - imported by numpy.core, numpy.testing.utils
@@ -114,77 +114,25 @@ missing module named clr - imported by nose.suite
 missing module named unittest2 - imported by nose.plugins.skip
 missing module named win32evtlog - imported by logging.handlers
 missing module named win32evtlogutil - imported by logging.handlers
-missing module named scipy.linalg._clapack - imported by scipy.linalg, scipy.linalg.lapack
-missing module named scipy.linalg._cblas - imported by scipy.linalg, scipy.linalg.blas
-missing module named scipy.special.gammainc - imported by scipy.special, sklearn.neighbors.kde
-missing module named scipy.special.expit - imported by scipy.special, sklearn.gaussian_process.gpc
-missing module named scipy.special.erf - imported by scipy.special, sklearn.gaussian_process.gpc
-missing module named scipy.special.beta - imported by scipy.special, scipy.stats._tukeylambda_stats
-missing module named scipy.special.erfc - imported by scipy.special, scipy.stats._continuous_distns
-missing module named scipy.special.inv_boxcox1p - imported by scipy.special, scipy.stats._continuous_distns
-missing module named scipy.special.boxcox - imported by scipy.special, scipy.stats._continuous_distns
-missing module named scipy.special.boxcox1p - imported by scipy.special, scipy.stats._continuous_distns
-missing module named scipy.special.inv_boxcox - imported by scipy.special, scipy.stats._continuous_distns
-missing module named scipy.special.chndtrix - imported by scipy.special, scipy.stats._continuous_distns
-missing module named scipy.special.kl_div - imported by scipy.special, scipy.stats._distn_infrastructure
-missing module named scipy.special.xlogy - imported by scipy.special, scipy.stats._distn_infrastructure
-missing module named scipy.special.entr - imported by scipy.special, scipy.stats._distn_infrastructure, scipy.stats._discrete_distns
-missing module named scipy.special.chndtr - imported by scipy.special, scipy.stats._distn_infrastructure, scipy.stats._continuous_distns
-missing module named scipy.special.ive - imported by scipy.special, scipy.stats._distn_infrastructure
-missing module named scipy.special.logsumexp - imported by scipy.special, sklearn.utils.fixes
-missing module named numpy.inexact - imported by numpy, scipy.linalg.decomp, scipy.special.basic, scipy.optimize.minpack
-missing module named numpy.less - imported by numpy, scipy.special.basic
-missing module named numpy.arccos - imported by numpy, scipy.special.orthogonal
-missing module named scipy.special.airy - imported by scipy.special, scipy.special.orthogonal
-missing module named PIL.ImageTk - imported by PIL, PIL.SpiderImagePlugin
-missing module named 'PyQt5.QtCore' - imported by PIL.ImageQt
-missing module named pathlib - imported by PIL.Image, sklearn.externals.joblib.numpy_pickle
-missing module named _imaging_gif - imported by PIL.GifImagePlugin
-missing module named cffi - imported by PIL.Image, PIL.PyAccess
-missing module named numpy.amax - imported by numpy, numpy.ma.core, scipy.linalg.matfuncs, scipy.misc.common, scipy.misc.pilutil, scipy.stats.morestats
-missing module named numpy.iscomplexobj - imported by numpy, numpy.ma.core, scipy.linalg.decomp, scipy.misc.pilutil
-missing module named numpy.amin - imported by numpy, numpy.ma.core, scipy.misc.pilutil, scipy.stats.morestats
-missing module named numpy.isfinite - imported by numpy, scipy.linalg.decomp, scipy.linalg.matfuncs, scipy.misc.common, scipy.optimize.slsqp
-missing module named numpy.sign - imported by numpy, scipy.linalg.matfuncs, scipy.misc.common, scipy.optimize.zeros
-missing module named numpy.log - imported by numpy, scipy.misc.common, scipy.stats._distn_infrastructure, scipy.stats._continuous_distns, scipy.stats._discrete_distns, scipy.stats.morestats
-missing module named scipy.sparse.coo_matrix - imported by scipy.sparse, scipy.sparse.data, sklearn.utils.fixes, scipy.optimize._numdiff, sklearn.metrics.classification
-missing module named scikits - imported by scipy.sparse.linalg.dsolve.linsolve
-missing module named scipy.sparse.linalg.onenormest - imported by scipy.sparse.linalg, scipy.linalg._matfuncs_inv_ssq
-missing module named numpy.absolute - imported by numpy, scipy.linalg.matfuncs
-missing module named numpy.conjugate - imported by numpy, scipy.linalg.matfuncs
-missing module named numpy.single - imported by numpy, scipy.linalg.decomp_schur, scipy.linalg.matfuncs
-missing module named numpy.logical_not - imported by numpy, scipy.linalg.matfuncs
-missing module named numpy.conj - imported by numpy, scipy.linalg.decomp
-missing module named numpy.random.randint - imported by numpy.random, scipy.stats.kde
-missing module named numpy.random.multivariate_normal - imported by numpy.random, scipy.stats.kde
-missing module named numpy.power - imported by numpy, scipy.stats.kde
-missing module named numpy.isinf - imported by numpy, scipy.optimize.optimize, scipy.stats._distn_infrastructure, matplotlib.mathtext
-missing module named numpy.NINF - imported by numpy, scipy.stats._distn_infrastructure
-missing module named numpy.logical_and - imported by numpy, scipy.stats._distn_infrastructure
-missing module named numpy.log1p - imported by numpy, scipy.stats._discrete_distns
-missing module named numpy.cosh - imported by numpy, scipy.stats._continuous_distns, scipy.stats._discrete_distns
-missing module named numpy.tanh - imported by numpy, scipy.stats._continuous_distns, scipy.stats._discrete_distns
-missing module named numpy.expm1 - imported by numpy, scipy.stats._discrete_distns
-missing module named numpy.sinh - imported by numpy, scipy.stats._continuous_distns, scipy.stats._discrete_distns
-missing module named numpy.arctan - imported by numpy, scipy.stats._continuous_distns
-missing module named numpy.tan - imported by numpy, scipy.stats._continuous_distns
-missing module named numpy.arctanh - imported by numpy, scipy.stats._continuous_distns
-missing module named numpy.arcsin - imported by numpy, scipy.stats._continuous_distns
-missing module named numpy.double - imported by numpy, scipy.optimize.nnls
-missing module named numpy.float64 - imported by numpy, scipy.optimize.lbfgsb
-missing module named numpy.greater - imported by numpy, scipy.optimize.minpack
-missing module named scipy.arange - imported by scipy, scipy.sparse.linalg.isolve.minres
-missing module named scipy.ones - imported by scipy, scipy.sparse.linalg.isolve.minres
 missing module named numpy.random.randn - imported by numpy.random, scipy
 missing module named numpy.random.rand - imported by numpy.random, scipy
 missing module named numpy.expand_dims - imported by numpy, numpy.ma.core
+missing module named numpy.amax - imported by numpy, numpy.ma.core
+missing module named numpy.iscomplexobj - imported by numpy, numpy.ma.core
+missing module named numpy.amin - imported by numpy, numpy.ma.core
 missing module named IPython - imported by matplotlib.pyplot
+missing module named numpy.isinf - imported by numpy, matplotlib.mathtext
 missing module named gdk - imported by gtk
 missing module named 'matplotlib._windowing' - imported by matplotlib.backends.windowing
 missing module named PySide - imported by matplotlib.backends.qt_compat
 missing module named PyQt5 - imported by matplotlib.backends.qt_compat
 missing module named 'cairo.gtk' - imported by matplotlib.backends.backend_gtkcairo
 missing module named cairocffi - imported by matplotlib.backends.backend_cairo
+missing module named PIL.ImageTk - imported by PIL, PIL.SpiderImagePlugin
+missing module named 'PyQt5.QtCore' - imported by PIL.ImageQt
+missing module named pathlib - imported by PIL.Image
+missing module named _imaging_gif - imported by PIL.GifImagePlugin
+missing module named cffi - imported by PIL.Image, PIL.PyAccess
 missing module named 'tornado.template' - imported by matplotlib.backends.backend_webagg
 missing module named 'tornado.websocket' - imported by matplotlib.backends.backend_webagg
 missing module named 'tornado.ioloop' - imported by matplotlib.backends.backend_webagg
@@ -277,9 +225,6 @@ missing module named 'collections.abc' - imported by matplotlib.rcsetup
 missing module named 'IPython.utils' - imported by matplotlib
 missing module named faulthandler - imported by matplotlib
 missing module named mock - imported by matplotlib
-missing module named 'multiprocessing.context' - imported by sklearn.externals.joblib._multiprocessing_helpers
-missing module named lzma - imported by sklearn.externals.joblib.numpy_pickle_utils
-missing module named 'sklearn.externals.six.moves' - imported by sklearn.utils.extmath, sklearn.multiclass, sklearn.random_projection
 missing module named win32con - imported by distutils.msvccompiler
 missing module named configparser - imported by setuptools.py36compat, numpy.distutils.system_info, numpy.distutils.npy_pkg_config
 missing module named 'numpy_distutils.cpuinfo' - imported by numpy.f2py.diagnose
