@@ -82,7 +82,7 @@ class Ui_Form(object):
         #popup = QDialog()
         #popup.ui = Ui_Form()
 
-
+ #
 
 
 class Ui_MainWindow(object):
@@ -101,6 +101,10 @@ class Ui_MainWindow(object):
     P_pad3 = ""
     listOfAverages = ""
     sumIntervalTab3 = ""
+
+
+    #third pad
+    result_tap_2 = ""
 
     #general
     filename = ""
@@ -143,7 +147,7 @@ class Ui_MainWindow(object):
         self.tableWidget_2 = QtGui.QTableWidget(self.tab_4)
         self.tableWidget_2.setGeometry(QtCore.QRect(0, 0, 511, 491))
         self.tableWidget_2.setObjectName(_fromUtf8("tableWidget_2"))
-        self.tableWidget_2.setColumnCount(5)
+        self.tableWidget_2.setColumnCount(3)
         self.tableWidget_2.setRowCount(0)
         item = QtGui.QTableWidgetItem()
         self.tableWidget_2.setHorizontalHeaderItem(0, item)
@@ -151,8 +155,6 @@ class Ui_MainWindow(object):
         self.tableWidget_2.setHorizontalHeaderItem(1, item)
         item = QtGui.QTableWidgetItem()
         self.tableWidget_2.setHorizontalHeaderItem(2, item)
-        item = QtGui.QTableWidgetItem()
-        self.tableWidget_2.setHorizontalHeaderItem(4, item)
         self.pushButton_2 = QtGui.QPushButton(self.tab_4)
         self.pushButton_2.setGeometry(QtCore.QRect(590, 200, 121, 71))
         self.pushButton_2.setObjectName(_fromUtf8("pushButton_2"))
@@ -247,7 +249,7 @@ class Ui_MainWindow(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow", None))
+        MainWindow.setWindowTitle(_translate("MainWindow", " ", None))
         self.pushButton.setText(_translate("MainWindow", "Build", None))
         self.pushButton.clicked.connect(self.buildTabHist1)
         item = self.tableWidget.horizontalHeaderItem(0)
@@ -258,18 +260,17 @@ class Ui_MainWindow(object):
         item.setText(_translate("MainWindow", "f", None))
         self.tabWidget_2.setTabText(self.tabWidget_2.indexOf(self.tab_3), _translate("MainWindow", "Analysis", None))
         item = self.tableWidget_2.horizontalHeaderItem(0)
-        item.setText(_translate("MainWindow", "X", None))
-        item = self.tableWidget_2.horizontalHeaderItem(1)
         item.setText(_translate("MainWindow", "N", None))
-        item = self.tableWidget_2.horizontalHeaderItem(2)
+        item = self.tableWidget_2.horizontalHeaderItem(1)
         item.setText(_translate("MainWindow", "p(x)", None))
-        item = self.tableWidget_2.horizontalHeaderItem(4)
+        item = self.tableWidget_2.horizontalHeaderItem(2)
         item.setText(_translate("MainWindow", "P(x)", None))
         self.pushButton_2.setText(_translate("MainWindow", "Build", None))
+        self.pushButton_2.clicked.connect(self.drawgGaf)
         self.radioButton.setText(_translate("MainWindow", "p(x)", None))
         self.radioButton_2.setText(_translate("MainWindow", "P(x)", None))
         self.tabWidget_2.setTabText(self.tabWidget_2.indexOf(self.tab_4), _translate("MainWindow", "dTi", None))
-        self.label.setText(_translate("MainWindow", "Count of interval items:", None))
+        self.label.setText(_translate("MainWindow", "Count of interval:", None))
         self.lineEdit.setPlaceholderText(_translate("MainWindow", "", None))
         self.lineEdit.setText("8")
         #item = self.tableWidget_4.horizontalHeaderItem(0)
@@ -334,7 +335,6 @@ class Ui_MainWindow(object):
         self.popup.exec_()
         global N
         self.n = N
-        print(self.n)
 
 
     #this function split text into n-gramms and run waterflow functions which
@@ -345,10 +345,12 @@ class Ui_MainWindow(object):
         self.readyText = splittedText
         #here caled waterflow functions for tab1
         self.table1()
-        #here called waterflow functions for tab2
+        #here called waterflow functions for tab4
         self.calcNewSymbols()
         #here called watetflow functions for tab3
         self.chunksIntervals()
+        #here calle wateeflow functions for tab2
+        self.calcSecTab()
 
 
 
@@ -490,8 +492,12 @@ class Ui_MainWindow(object):
 
     #this function gets value from line edit and convert to int
     def getFromLineEdit(self):
+        new_value = ""
         value = [str(item) for item in self.lineEdit.text()]
-        self.NumberOfIntervalsItems = int(value[0])
+        for item in value:
+            new_value = new_value + item
+        self.NumberOfIntervalsItems = int( len(self.readyText)/int(new_value) )
+
 
 
 
@@ -500,13 +506,11 @@ class Ui_MainWindow(object):
         self.getFromLineEdit()
         self.chunkedText = zip(*[iter(self.newWordsText)] * self.NumberOfIntervalsItems)
         self.get_p_tab3()
-        self.get_P_tab3()
 
 
 
 
-
-    #this function is copied from c# parent. No metter how it works
+    #this function is copied from c# parent. No matter how it works
     def get_p_tab3(self):
         result = []
         for index in range(len(self.chunkedText)):
@@ -518,13 +522,15 @@ class Ui_MainWindow(object):
         for item in range(len(result)):
             result[item] = result[item]/sum(result)
         self.p_pad3 = result
+        self.get_P_tab3()
 
 
 
-    #this function is copied from c# parent. No metter how it works
+    #this function is copied from c# parent. No metter how it works(on previous interval get value)
+    #takes sum of new words from previous intervals and get 1 - sum  new words on  prev intervals / general_summary
     def get_P_tab3(self):
         result = []
-        current_p = 1
+        current_p = 1.0
         for index in range(len(self.chunkedText)):
             summary = 0
             for item in self.chunkedText[index]:
@@ -535,7 +541,7 @@ class Ui_MainWindow(object):
         new_result.append(current_p)
         general_summary = sum(result)
         for item in range(1, len(result)):
-            new_result.append( current_p - (result[item]/general_summary))
+            new_result.append( current_p - (sum(result[0:item])/general_summary))
         self.P_pad3 = new_result
         self.calcAverage()
 
@@ -579,11 +585,6 @@ class Ui_MainWindow(object):
 
 
 
-
-
-
-
-
     #this function build graphic via mat plot lib , here it build one which is
     #checked
     def buildGrahTab3(self):
@@ -600,7 +601,6 @@ class Ui_MainWindow(object):
                 result.append(summary)
                 resultin.append(index)
             counts = Counter(result)
-            print(result)
             #labels, values = zip(*counts.items())
 
             #indexes = np.arange(len(labels))
@@ -632,6 +632,78 @@ class Ui_MainWindow(object):
             plt.plot(x, y, 'k')
             plt.grid(color='b', linestyle='-', linewidth=0.5)
             plt.show()
+
+
+
+
+
+    #LAst tab(2, second Dti)
+    #this function make chunks depent on smth
+    def calcSecTab (self):
+        fn = 1
+        st = 0
+        dti = {}
+        #calc dti
+        for item in range(1, len(self.newWordsText)):
+            fn = item
+            if self.newWordsText[item]:
+                dti[item]= (fn - st - 1)
+                st = item
+        autoChunk = []
+    #set intervals
+        for item in dti:
+            if item in autoChunk:
+                autoChunk[item] += 1
+            else:
+                autoChunk.append(item)
+        self.result_tap_2 = sorted(autoChunk, reverse = True)
+        self.fillTableTab2()
+
+
+
+    #this function fill qttable for tab2
+    def fillTableTab2(self):
+        self.tableWidget_2.setRowCount(len(self.result_tap_2)-1)
+        summary = sum(self.result_tap_2)
+        for itemRow in range(0,len(self.result_tap_2)):
+            item0 = QTableWidgetItem()
+            item0.setText(str(self.result_tap_2[itemRow]))
+            item1 = QTableWidgetItem()
+            item1.setText(str(self.result_tap_2[itemRow]/summary))
+            item2 = QTableWidgetItem()
+            item2.setText(str(1))
+            self.tableWidget_2.setItem(itemRow,0,item0)
+            self.tableWidget_2.setItem(itemRow,1,item1)
+            self.tableWidget_2.setItem(itemRow,2,item2)
+
+
+
+    #this function draw graphic fo tab2
+    def drawgGaf(self):
+        if self.radioButton.isChecked():
+            iteration_x = []
+            iteration_y = self.result_tap_2
+            for i in range(len(self.result_tap_2)):
+                iteration_x.append(i)
+            x = iteration_x
+            y = iteration_y
+
+            plt.plot(x, y, 'k')
+            plt.grid(color='b', linestyle='-', linewidth=0.5)
+            plt.show()
+        elif self.radioButton_2.isChecked():
+            iteration_x = []
+            iteration_y = self.result_tap_2
+            for i in range(len(self.result_tap_2)):
+                iteration_x.append(i)
+            x = iteration_x
+            y = iteration_y
+
+            plt.plot(x, y, 'k')
+            plt.grid(color='b', linestyle='-', linewidth=0.5)
+            plt.show()
+
+
 
 
 
