@@ -94,7 +94,7 @@ class Ui_MainWindow(object):
     newWordsText = ""
     big_P_x = ""
 
-    #thirPad
+    #third Pad
     NumberOfIntervalsItems = ""
     chunkedText = ""
     p_pad3 = ""
@@ -103,8 +103,9 @@ class Ui_MainWindow(object):
     sumIntervalTab3 = ""
 
 
-    #third pad
+    #second pad
     result_tap_2 = ""
+    result_P_tap_2 = ""
 
     #general
     filename = ""
@@ -657,7 +658,19 @@ class Ui_MainWindow(object):
             else:
                 autoChunk.append(item)
         self.result_tap_2 = sorted(autoChunk, reverse = True)
+        self.calc_Big_P_tab2()
         self.fillTableTab2()
+
+
+
+    #this func calc P(x) for tab2
+    def calc_Big_P_tab2(self):
+        current = 1
+        summary = sum(self.result_tap_2)
+        result = []
+        for item in self.result_tap_2:
+            result.append(current - (item / summary))
+        self.result_P_tap_2 = result[::-1]
 
 
 
@@ -671,7 +684,7 @@ class Ui_MainWindow(object):
             item1 = QTableWidgetItem()
             item1.setText(str(self.result_tap_2[itemRow]/summary))
             item2 = QTableWidgetItem()
-            item2.setText(str(1))
+            item2.setText(str(self.result_P_tap_2[itemRow]))
             self.tableWidget_2.setItem(itemRow,0,item0)
             self.tableWidget_2.setItem(itemRow,1,item1)
             self.tableWidget_2.setItem(itemRow,2,item2)
@@ -693,8 +706,8 @@ class Ui_MainWindow(object):
             plt.show()
         elif self.radioButton_2.isChecked():
             iteration_x = []
-            iteration_y = self.result_tap_2
-            for i in range(len(self.result_tap_2)):
+            iteration_y = self.result_P_tap_2
+            for i in range(len(self.result_P_tap_2)):
                 iteration_x.append(i)
             x = iteration_x
             y = iteration_y
