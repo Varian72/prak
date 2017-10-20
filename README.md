@@ -19,7 +19,7 @@ Used modules and versions:
   - PyQt4 '4.11.4'
   - matplotlib '1.5.1'
 
-for building, please, use pyinstaller.
+for building, please, use pyinstaller(for each platform it must be build separately).
 
 To get this from git hub, use:
   1. clone from https://github.com/Varian72/prak
@@ -27,7 +27,7 @@ To get this from git hub, use:
   3. Have fun:
     a. To develop go to directory, than use python(check if this command run right version)
       "python praktyka.py"
-    b. To just run, go to ./dist and run "praktyka.exe" 
+    b. To just run, go to ./dist and run "praktyka.exe"
 
 
 
