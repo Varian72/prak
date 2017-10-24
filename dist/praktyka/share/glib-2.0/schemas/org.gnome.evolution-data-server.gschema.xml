@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema path="/org/gnome/evolution-data-server/" id="org.gnome.evolution-data-server" gettext-domain="evolution-data-server">
+    <key type="b" name="migrated">
+      <default>false</default>
+      <summary>Whether the migration of old setting was already done</summary>
+    </key>
+    <key type="s" name="camel-gpg-binary">
+      <default>''</default>
+      <summary>An absolute path where the gpg (or gpg2) binary is</summary>
+      <description>An example is “/usr/bin/gpg”; when it is left empty, or an incorrect value is set, then it will be searched for. Change requires restart of the application.</description>
+    </key>
+    <key type="b" name="camel-cipher-load-photos">
+      <default>true</default>
+      <summary>Whether to load photos of signers/encrypters</summary>
+      <description>When set to “true”, tries to load also photo of the signers/encrypters, if available in the key/certificate.</description>
+    </key>
+    <key type="s" name="network-monitor-gio-name">
+      <default>''</default>
+      <summary>GIO name of the GNetworkMonitor to use for an ENetworkMonitor instance</summary>
+      <description>When set to an unknown value, then the default GNetworkMonitor is used in the background. A special value “always-online” is used for no network monitoring.</description>
+    </key>
+    <key type="s" name="autoconfig-directory">
+      <default>''</default>
+      <summary>A full path to a directory where .source files with preconfigured options can be stored</summary>
+      <description>This directory, if filled with an existing path, is checked additionally to XDG configure directories.</description>
+    </key>
+    <key type="as" name="autoconfig-variables">
+      <default>['']</default>
+      <summary>A list of variables which can be part of the autoconfig .source files</summary>
+      <description>Each item of the array is expected to be of the form: name=value. These variables are checked before environment variables, but after the predefined USER, REALNAME and HOST variables.</description>
+    </key>
+  </schema>
+</schemalist>

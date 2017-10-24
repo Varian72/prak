@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg id="svg7384" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" xmlns:osb="http://www.openswatchbook.org/uri/2009/osb" height="16" viewBox="0 0 16.03126 16" width="16.031" version="1.1" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/">
+ <metadata id="metadata90">
+  <rdf:RDF>
+   <cc:Work rdf:about="">
+    <dc:format>image/svg+xml</dc:format>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:title>Gnome Symbolic Icon Theme</dc:title>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <title id="title9167">Gnome Symbolic Icon Theme</title>
+ <g id="layer12" transform="translate(-119.97 -806)">
+  <path id="path3239" style="color-rendering:auto;text-decoration-color:#000000;color:#000000;font-variant-numeric:normal;text-orientation:mixed;shape-rendering:auto;solid-color:#000000;text-decoration-line:none;fill:#bebebe;filter-blend-mode:normal;font-variant-position:normal;mix-blend-mode:normal;font-variant-east-asian:normal;font-feature-settings:normal;shape-padding:0;font-variant-alternates:normal;filter-gaussianBlur-deviation:0;text-indent:0;dominant-baseline:auto;font-variant-caps:normal;image-rendering:auto;white-space:normal;text-decoration-style:solid;font-variant-ligatures:normal;isolation:auto;enable-background:new;text-transform:none" d="m124.97 808s-0.71-0.01-1.45 0.36c-0.74 0.36-1.55 1.31-1.55 2.64v5.01h-2v5.99h16.03v-5.99h-1.99-0.01v-5.01s0.01-0.71-0.36-1.45c-0.36-0.74-1.31-1.55-2.64-1.55h-6.03zm0 2h6.03c0.67 0 0.72 0.19 0.86 0.45 0.13 0.26 0.14 0.55 0.14 0.55v6.99l1.99 0.02h0.01v1.99h-12.03v-1.99l2-0.01v-7c0-0.67 0.18-0.72 0.45-0.86 0.26-0.13 0.55-0.14 0.55-0.14z"/>
+  <path id="rect12294-2-3" style="fill:#bebebe" d="m127 811v2h-2v2h2v2h2v-2h2v-2h-2v-2z"/>
+ </g>
+</svg>

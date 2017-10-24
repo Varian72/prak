@@ -28,21 +28,20 @@ MODLIBS=        $(LOCALMODLIBS) $(BASEMODLIBS)
 VERSION=	2.7
 srcdir=		..
 VPATH=		..
-abs_srcdir=	/build/python2.7-1tJBSB/python2.7-2.7.12/build-shared/..
-abs_builddir=	/build/python2.7-1tJBSB/python2.7-2.7.12/build-shared
+abs_srcdir=	/build/python2.7-l1RrwO/python2.7-2.7.14/build-shared/..
+abs_builddir=	/build/python2.7-l1RrwO/python2.7-2.7.14/build-shared
 build=		x86_64-pc-linux-gnu
 host=		x86_64-pc-linux-gnu
 
 CC=		x86_64-linux-gnu-gcc -pthread
-CXX=		c++ -pthread
+CXX=		x86_64-linux-gnu-g++ -pthread
 MAINCC=		$(CC)
 LINKCC=		$(PURIFY) $(MAINCC)
 AR=		x86_64-linux-gnu-gcc-ar
 RANLIB=		x86_64-linux-gnu-gcc-ranlib
-SVNVERSION=	echo Unversioned directory
-HGVERSION=	
-HGTAG=		
-HGBRANCH=	
+GITVERSION=	
+GITTAG=		
+GITBRANCH=	
 PGO_PROF_GEN_FLAG=-fprofile-generate
 PGO_PROF_USE_FLAG=-fprofile-use -fprofile-correction
 LLVM_PROF_MERGER=true
@@ -74,7 +73,7 @@ MAKESETUP=      $(srcdir)/Modules/makesetup
 # Compiler options
 OPT=		-DNDEBUG -g -fwrapv -O2 -Wall -Wstrict-prototypes
 BASECFLAGS=	 -fno-strict-aliasing
-CONFIGURE_CFLAGS=	-Wdate-time -D_FORTIFY_SOURCE=2 -g -fstack-protector-strong -Wformat -Werror=format-security 
+CONFIGURE_CFLAGS=	-Wdate-time -D_FORTIFY_SOURCE=2 -g -fdebug-prefix-map=/build/python2.7-l1RrwO/python2.7-2.7.14=. -fstack-protector-strong -Wformat -Werror=format-security 
 CONFIGURE_CPPFLAGS=	
 CONFIGURE_LDFLAGS=	-Wl,-Bsymbolic-functions -Wl,-z,relro
 # Avoid assigning CFLAGS, LDFLAGS, etc. so users can use them on the
@@ -171,11 +170,11 @@ EXEMODE=	755
 FILEMODE=	644
 
 # configure script arguments
-CONFIG_ARGS=	 '--enable-shared' '--prefix=/usr' '--enable-ipv6' '--enable-unicode=ucs4' '--with-dbmliborder=bdb:gdbm' '--with-system-expat' '--with-computed-gotos' '--with-system-ffi' '--with-fpectl' 'CC=x86_64-linux-gnu-gcc' 'CFLAGS=-Wdate-time -D_FORTIFY_SOURCE=2 -g -fstack-protector-strong -Wformat -Werror=format-security ' 'LDFLAGS=-Wl,-Bsymbolic-functions -Wl,-z,relro'
+CONFIG_ARGS=	 '--enable-shared' '--prefix=/usr' '--enable-ipv6' '--enable-unicode=ucs4' '--with-dbmliborder=bdb:gdbm' '--with-system-expat' '--with-computed-gotos' '--with-system-ffi' 'CC=x86_64-linux-gnu-gcc' 'CFLAGS=-Wdate-time -D_FORTIFY_SOURCE=2 -g -fdebug-prefix-map=/build/python2.7-l1RrwO/python2.7-2.7.14=. -fstack-protector-strong -Wformat -Werror=format-security ' 'LDFLAGS=-Wl,-Bsymbolic-functions -Wl,-z,relro'
 
 
 # Subdirectories with code
-SRCDIRS= 	Parser Grammar Objects Python Modules Mac
+SRCDIRS= 	Parser Objects Python Modules
 
 # Other subdirectories
 SUBDIRSTOO=	Include Lib Misc Demo
@@ -212,7 +211,7 @@ UNICODE_OBJS=   Objects/unicodeobject.o Objects/unicodectype.o
 PYTHON=		python$(EXE)
 BUILDPYTHON=	python$(BUILDEXE)
 
-cross_compiling=no
+PYTHON_FOR_REGEN=python2.7
 PYTHON_FOR_BUILD=./$(BUILDPYTHON) -E
 _PYTHON_HOST_PLATFORM=
 HOST_GNU_TYPE=  x86_64-pc-linux-gnu
@@ -263,11 +262,6 @@ SIGNAL_OBJS=
 
 
 ##########################################################################
-# Grammar
-GRAMMAR_H=	Include/graminit.h
-GRAMMAR_C=	Python/graminit.c
-GRAMMAR_INPUT=	$(srcdir)/Grammar/Grammar
-
 
 LIBFFI_INCLUDEDIR=	
 
@@ -327,29 +321,6 @@ PGENSRCS=	$(PSRCS) $(PGSRCS)
 PGENOBJS=	$(POBJS) $(PGOBJS)
 
 ##########################################################################
-# AST
-AST_H_DIR=	Include
-AST_H=		$(AST_H_DIR)/Python-ast.h
-AST_C_DIR=	Python
-AST_C=		$(AST_C_DIR)/Python-ast.c
-AST_ASDL=	$(srcdir)/Parser/Python.asdl
-
-ASDLGEN_FILES=	$(srcdir)/Parser/asdl.py $(srcdir)/Parser/asdl_c.py
-# XXX Note that a build now requires Python exist before the build starts
-ASDLGEN=	$(srcdir)/Parser/asdl_c.py
-
-##########################################################################
-# Python
-
-OPCODETARGETS_H= \
-		$(srcdir)/Python/opcode_targets.h
-		
-OPCODETARGETGEN= \
-		$(srcdir)/Python/makeopcodetargets.py
-
-OPCODETARGETGEN_FILES= \
-		$(OPCODETARGETGEN) $(srcdir)/Lib/opcode.py
-
 PYTHON_OBJS=	\
 		Python/_warnings.o \
 		Python/Python-ast.o \
@@ -523,9 +494,8 @@ coverage-lcov:
 	@echo "lcov report at $(COVERAGE_REPORT)/index.html"
 	@echo
 
-coverage-report:
-	: # force rebuilding of parser
-	@touch $(GRAMMAR_INPUT)
+# Force regeneration of parser
+coverage-report: regen-grammar
 	: # build with coverage info
 	$(MAKE) coverage
 	: # run tests, ignore failures
@@ -590,10 +560,10 @@ $(LIBRARY): $(LIBRARY_OBJS)
 
 libpython$(VERSION)$(DEBUG_EXT).so: $(LIBRARY_OBJS)
 	if test $(INSTSONAME) != $(LDLIBRARY); then \
-		$(BLDSHARED) $(PY_LDFLAGS) -Wl,-h$(INSTSONAME) -o $(INSTSONAME) $(LIBRARY_OBJS) $(MODLIBS) $(SHLIBS) $(LIBC) $(LIBM) $(LDLAST); \
+		$(BLDSHARED) $(PY_LDFLAGS) $(CCSHARED) -Wl,-h$(INSTSONAME) -o $(INSTSONAME) $(LIBRARY_OBJS) $(MODLIBS) $(SHLIBS) $(LIBC) $(LIBM) $(LDLAST); \
 		$(LN) -f $(INSTSONAME) $@; \
 	else \
-		$(BLDSHARED) $(PY_LDFLAGS) -o $@ $(LIBRARY_OBJS) $(MODLIBS) $(SHLIBS) $(LIBC) $(LIBM) $(LDLAST); \
+		$(BLDSHARED) $(PY_LDFLAGS) $(CCSHARED) -o $@ $(LIBRARY_OBJS) $(MODLIBS) $(SHLIBS) $(LIBC) $(LIBM) $(LDLAST); \
 	fi
 
 libpython$(VERSION).dylib: $(LIBRARY_OBJS)
@@ -678,6 +648,12 @@ Modules/Setup: $(srcdir)/Modules/Setup.dist
 		echo "-----------------------------------------------"; \
 	fi
 
+
+############################################################################
+# Regenerate all generated files
+
+regen-all: regen-opcode-targets regen-grammar regen-ast
+
 ############################################################################
 # Special rules for object files
 
@@ -689,10 +665,9 @@ Modules/getbuildinfo.o: $(PARSER_OBJS) \
 		$(MODOBJS) \
 		$(srcdir)/Modules/getbuildinfo.c
 	$(CC) -c $(PY_CORE_CFLAGS) \
-	      -DSVNVERSION="\"`LC_ALL=C $(SVNVERSION)`\"" \
-	      -DHGVERSION="\"`LC_ALL=C $(HGVERSION)`\"" \
-	      -DHGTAG="\"`LC_ALL=C $(HGTAG)`\"" \
-	      -DHGBRANCH="\"`LC_ALL=C $(HGBRANCH)`\"" \
+	      -DGITVERSION="\"`LC_ALL=C $(GITVERSION)`\"" \
+	      -DGITTAG="\"`LC_ALL=C $(GITTAG)`\"" \
+	      -DGITBRANCH="\"`LC_ALL=C $(GITBRANCH)`\"" \
 	      $(if $(BUILD_DATE),-DDATE='"$(BUILD_DATE)"') \
 	      $(if $(BUILD_TIME),-DTIME='"$(BUILD_TIME)"') \
 	      -o $@ $(srcdir)/Modules/getbuildinfo.c
@@ -714,25 +689,17 @@ Modules/grpmodule.o: $(srcdir)/Modules/grpmodule.c $(srcdir)/Modules/posixmodule
 
 Modules/pwdmodule.o: $(srcdir)/Modules/pwdmodule.c $(srcdir)/Modules/posixmodule.h
 
-$(GRAMMAR_H): $(GRAMMAR_INPUT) $(PGEN)
-	@$(MKDIR_P) Include
-	# Avoid copying the file onto itself for an in-tree build
-	if test "$(cross_compiling)" != "yes"; then \
-		$(PGEN) $(GRAMMAR_INPUT) $(GRAMMAR_H) $(GRAMMAR_C); \
-	else \
-		cp $(srcdir)/Include/graminit.h $(GRAMMAR_H).tmp; \
-		mv $(GRAMMAR_H).tmp $(GRAMMAR_H); \
-	fi
-$(GRAMMAR_C): $(GRAMMAR_H)
-	if test "$(cross_compiling)" != "yes"; then \
-		touch $(GRAMMAR_C); \
-	else \
-		cp $(srcdir)/Python/graminit.c $(GRAMMAR_C).tmp; \
-		mv $(GRAMMAR_C).tmp $(GRAMMAR_C); \
-	fi
-
 $(PGEN):	$(PGENOBJS)
 		$(CC) $(OPT) $(PY_LDFLAGS) $(PGENOBJS) $(LIBS) -o $(PGEN)
+
+.PHONY: regen-grammar
+regen-grammar: $(PGEN)
+	# Regenerate Include/graminit.h and Python/graminit.c
+	# from Grammar/Grammar using pgen
+	@$(MKDIR_P) Include
+	$(PGEN) $(srcdir)/Grammar/Grammar \
+		$(srcdir)/Include/graminit.h \
+		$(srcdir)/Python/graminit.c
 
 Parser/grammar.o:	$(srcdir)/Parser/grammar.c \
 				$(srcdir)/Include/token.h \
@@ -743,15 +710,20 @@ Parser/tokenizer_pgen.o:	$(srcdir)/Parser/tokenizer.c
 
 Parser/pgenmain.o:	$(srcdir)/Include/parsetok.h
 
-$(AST_H): $(AST_ASDL) $(ASDLGEN_FILES)
-	$(MKDIR_P) $(AST_H_DIR)
-	$(ASDLGEN) -h $(AST_H_DIR) $(AST_ASDL)
+.PHONY=regen-ast
+regen-ast:
+	# Regenerate Include/Python-ast.h using Parser/asdl_c.py -h
+	$(MKDIR_P) $(srcdir)/Include
+	$(PYTHON_FOR_REGEN) $(srcdir)/Parser/asdl_c.py \
+		-h $(srcdir)/Include \
+		$(srcdir)/Parser/Python.asdl
+	# Regenerate Python/Python-ast.c using Parser/asdl_c.py -c
+	$(MKDIR_P) $(srcdir)/Python
+	$(PYTHON_FOR_REGEN) $(srcdir)/Parser/asdl_c.py \
+		-c $(srcdir)/Python \
+		$(srcdir)/Parser/Python.asdl
 
-$(AST_C): $(AST_ASDL) $(ASDLGEN_FILES)
-	$(MKDIR_P) $(AST_C_DIR)
-	$(ASDLGEN) -c $(AST_C_DIR) $(AST_ASDL)
-
-Python/compile.o Python/symtable.o Python/ast.o: $(GRAMMAR_H) $(AST_H)
+Python/compile.o Python/symtable.o Python/ast.o: $(srcdir)/Include/graminit.h $(srcdir)/Include/Python-ast.h
 
 Python/getplatform.o: $(srcdir)/Python/getplatform.c
 		$(CC) -c $(PY_CORE_CFLAGS) -DPLATFORM='"$(MACHDEP)"' -o $@ $(srcdir)/Python/getplatform.c
@@ -786,10 +758,14 @@ Objects/bytearrayobject.o: $(srcdir)/Objects/bytearrayobject.c \
 Objects/stringobject.o: $(srcdir)/Objects/stringobject.c \
 				$(STRINGLIB_HEADERS)
 
-$(OPCODETARGETS_H): $(OPCODETARGETGEN_FILES)
-	$(OPCODETARGETGEN) $(OPCODETARGETS_H)
+.PHONY: regen-opcode-targets
+regen-opcode-targets:
+	# Regenerate Python/opcode_targets.h from Lib/opcode.py
+	# using Python/makeopcodetargets.py
+	$(PYTHON_FOR_REGEN) $(srcdir)/Python/makeopcodetargets.py \
+		$(srcdir)/Python/opcode_targets.h
 
-Python/ceval.o: $(OPCODETARGETS_H)
+Python/ceval.o: $(srcdir)/Python/opcode_targets.h
 
 Python/formatter_unicode.o: $(srcdir)/Python/formatter_unicode.c \
 				$(STRINGLIB_HEADERS)
@@ -884,7 +860,7 @@ PYTHON_HEADERS= \
 		Include/weakrefobject.h \
 		pyconfig.h \
 		$(PARSER_HEADERS) \
-		$(AST_H)
+		$(srcdir)/Include/Python-ast.h
 
 $(LIBRARY_OBJS) $(MODOBJS) Modules/python.o: $(PYTHON_HEADERS)
 
@@ -898,6 +874,8 @@ $(LIBRARY_OBJS) $(MODOBJS) Modules/python.o: $(PYTHON_HEADERS)
 # the bytecode read from a .pyc file had the bug, sometimes the directly
 # generated bytecode.  This is sometimes a very shy bug needing a lot of
 # sample data.
+
+.PHONY: test testall testuniversal buildbottest pythoninfo
 
 TESTOPTS=	-l $(EXTRATESTOPTS)
 TESTPROG=	$(srcdir)/Lib/test/regrtest.py
@@ -929,11 +907,14 @@ testuniversal:	all platform
 
 # Like testall, but with a single pass only
 # run an optional script to include some information about the build environment
-buildbottest:	all platform
+buildbottest:	build_all platform
 		-@if which pybuildbot.identify >/dev/null 2>&1; then \
 			pybuildbot.identify "CC='$(CC)'" "CXX='$(CXX)'"; \
 		fi
-		$(TESTPYTHON) -R $(TESTPROG) -uall -rwW $(TESTOPTS)
+		$(TESTPYTHON) -R $(TESTPROG) -uall --slowest -rwW $(TESTOPTS)
+
+pythoninfo: build_all
+		$(RUNSHARED) ./$(BUILDPYTHON) -m test.pythoninfo
 
 QUICKTESTOPTS=	$(TESTOPTS) -x test_subprocess test_io test_lib2to3 \
 		test_multibytecodec test_urllib2_localnet test_itertools \
@@ -1090,6 +1071,7 @@ LIBSUBDIRS=	lib-tk lib-tk/test lib-tk/test/test_tkinter \
 		test/data test/cjkencodings test/decimaltestdata test/xmltestdata \
 		test/imghdrdata \
 		test/subprocessdata \
+		test/support \
 		test/tracedmodules \
 		encodings compiler hotshot \
 		email email/mime email/test email/test/data \
@@ -1281,7 +1263,7 @@ libainstall:	all python-config
 		$(INSTALL_SCRIPT) $(srcdir)/Modules/makexp_aix	\
 				$(DESTDIR)$(LIBPL)/makexp_aix;		\
 		echo "$(LIBPL)/makexp_aix";			\
-		$(INSTALL_SCRIPT) $(srcdir)/Modules/ld_so_aix	\
+		$(INSTALL_SCRIPT) Modules/ld_so_aix	\
 				$(DESTDIR)$(LIBPL)/ld_so_aix;		\
 		echo "$(LIBPL)/ld_so_aix";			\
 		echo; echo "See Misc/AIX-NOTES for details.";	\
@@ -1406,29 +1388,27 @@ recheck:
 	$(SHELL) config.status --recheck
 	$(SHELL) config.status
 
-# Rebuild the configure script from configure.ac; also rebuild pyconfig.h.in
+# Regenerate configure and pyconfig.h.in
+.PHONY: autoconf
 autoconf:
+	# Regenerate the configure script from configure.ac using autoconf
 	(cd $(srcdir); autoconf)
+	# Regenerate pyconfig.h.in from configure.ac using autoheader
 	(cd $(srcdir); autoheader)
 
 # Create a tags file for vi
 tags::
 	cd $(srcdir); \
-	ctags -w -t Include/*.h; \
-	for i in $(SRCDIRS); do ctags -w -t -a $$i/*.[ch]; \
+	ctags -w Include/*.h; \
+	for i in $(SRCDIRS); do ctags -f tags -w -a $$i/*.[ch]; \
 	done; \
-	sort -o tags tags
+	LC_ALL=C sort -o tags tags
 
 # Create a tags file for GNU Emacs
 TAGS::
 	cd $(srcdir); \
 	etags Include/*.h; \
 	for i in $(SRCDIRS); do etags -a $$i/*.[ch]; done
-
-# Touch generated files
-touch:
-	cd $(srcdir); \
-	touch Include/Python-ast.h Python/Python-ast.c
 
 # Sanitation targets -- clean leaves libraries, executables and tags
 # files, which clobber removes as well
@@ -1442,7 +1422,7 @@ clean: pycremoval
 	find build -name 'fficonfig.h' -exec rm -f {} ';' || true
 	find build -name 'fficonfig.py' -exec rm -f {} ';' || true
 	-rm -f Lib/lib2to3/*Grammar*.pickle
-	-rm -rf build
+	-find build -type f -a ! -name '*.gc??' -exec rm -f {} ';'
 
 profile-removal:
 	find . -name '*.gc??' -exec rm -f {} ';'
@@ -1468,7 +1448,11 @@ distclean: clobber
 		Modules/ld_so_aix Modules/python.exp Misc/python.pc
 	-rm -f python*-gdb.py
 	-rm -f pybuilddir.txt
-	find $(srcdir)/[a-zA-Z]* '(' -name '*.fdc' -o -name '*~' \
+	# Issue #28258: set LC_ALL to avoid issues with Estonian locale.
+	# Expansion is performed here by shell (spawned by make) itself before
+	# arguments are passed to find. So LC_ALL=C must be set as a separate
+	# command.
+	LC_ALL=C; find $(srcdir)/[a-zA-Z]* '(' -name '*.fdc' -o -name '*~' \
 				     -o -name '[@,#]*' -o -name '*.old' \
 				     -o -name '*.orig' -o -name '*.rej' \
 				     -o -name '*.bak' ')' \
@@ -1527,8 +1511,8 @@ Python/sysmodule.o: $(srcdir)/Python/sysmodule.c Makefile
 .PHONY: maninstall libinstall inclinstall libainstall sharedinstall
 .PHONY: frameworkinstall frameworkinstallframework frameworkinstallstructure
 .PHONY: frameworkinstallmaclib frameworkinstallapps frameworkinstallunixtools
-.PHONY: frameworkaltinstallunixtools recheck autoconf clean clobber distclean
-.PHONY: smelly funny patchcheck touch altmaninstall commoninstall
+.PHONY: frameworkaltinstallunixtools recheck clean clobber distclean
+.PHONY: smelly funny patchcheck altmaninstall commoninstall
 .PHONY: gdbhooks
 
 # IF YOU PUT ANYTHING HERE IT WILL GO AWAY

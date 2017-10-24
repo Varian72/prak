@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['praktyka.py'],
-             pathex=['/home/ros/prak'],
+             pathex=['/home/varian72/univer/prak'],
              binaries=[],
              datas=[],
              hiddenimports=[],

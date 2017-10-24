@@ -1,0 +1,9 @@
+<schemalist>
+  <schema id="org.gnome.Contacts" path="/org/gnome/Contacts/" gettext-domain="gnome-contacts">
+    <key name="did-initial-setup" type="b">
+      <default>false</default>
+      <summary>First-time setup done.</summary>
+      <description>Set to true when the user ran the first-time setup wizard.</description>
+    </key>
+  </schema>
+</schemalist>

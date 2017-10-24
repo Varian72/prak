@@ -39,21 +39,77 @@ except AttributeError:
 global N
 N = 1
 
+global L
+global startIn
+global finishIn
+
+startIn = 0
+finishIn = 100
+
 class Ui_Form(object):
+
+    global L
 
     def setupUi(self, Form):
         Form.setObjectName(_fromUtf8("Form"))
-        Form.resize(400, 300)
+        Form.resize(600, 300)
         self.pushButton = QtGui.QPushButton(Form)
         self.pushButton.setGeometry(QtCore.QRect(210, 200, 121, 41))
         self.pushButton.setObjectName(_fromUtf8("pushButton"))
+        #self.pushButton_2 = QtGui.QPushButton(Form)
+        #self.pushButton_2.setGeometry(QtCore.QRect(70, 200, 121, 41))
+        #self.pushButton_2.setObjectName(_fromUtf8("pushButton"))
+        self.radioButton = QtGui.QRadioButton(Form)
+        self.radioButton.setEnabled(True)
+        self.radioButton.setGeometry(QtCore.QRect(400, 120, 71, 22))
+        self.radioButton.setChecked(True)
+        self.radioButton.setObjectName(_fromUtf8("radioButton"))
+        self.radioButton_2 = QtGui.QRadioButton(Form)
+        self.radioButton_2.setGeometry(QtCore.QRect(400, 150, 91, 22))
+        self.radioButton_2.setObjectName(_fromUtf8("radioButton_2"))
+
+
         self.spinBox = QtGui.QSpinBox(Form)
-        self.spinBox.setGeometry(QtCore.QRect(140, 110, 121, 31))
+        self.spinBox.setGeometry(QtCore.QRect(140, 20, 121, 31))
         self.spinBox.setObjectName(_fromUtf8("spinBox"))
         self.spinBox.setMinimum(1)
+
+        self.spinBox_2 = QtGui.QSpinBox(Form)
+        self.spinBox_2.setGeometry(QtCore.QRect(140, 80, 121, 31))
+        self.spinBox_2.setObjectName(_fromUtf8("spinBox_2"))
+        self.spinBox_2.setMaximum(L)
+
+
+
+        self.spinBox_3 = QtGui.QSpinBox(Form)
+        self.spinBox_3.setGeometry(QtCore.QRect(140, 120, 121, 31))
+        self.spinBox_3.setObjectName(_fromUtf8("spinBox_3"))
+        self.spinBox_3.setMinimum(finishIn)
+        self.spinBox_3.setMaximum(L)
+
+
+
+
         self.label = QtGui.QLabel(Form)
-        self.label.setGeometry(QtCore.QRect(120, 70, 71, 41))
+        self.label.setGeometry(QtCore.QRect(85, 31, 66, 11))
         self.label.setObjectName(_fromUtf8("label"))
+
+
+        self.label_2 = QtGui.QLabel(Form)
+        self.label_2.setGeometry(QtCore.QRect(120, 73, 71, 41))
+        self.label_2.setObjectName(_fromUtf8("label_2"))
+
+
+
+        self.label_3 = QtGui.QLabel(Form)
+        self.label_3.setGeometry(QtCore.QRect(40, 46, 330, 41))
+        self.label_3.setObjectName(_fromUtf8("label_3"))
+
+
+
+        self.label_4 = QtGui.QLabel(Form)
+        self.label_4.setGeometry(QtCore.QRect(100, 113, 71, 41))
+        self.label_4.setObjectName(_fromUtf8("label_4"))
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
@@ -61,18 +117,44 @@ class Ui_Form(object):
     def retranslateUi(self, Form):
         Form.setWindowTitle(_translate("Form", "Form", None))
         self.pushButton.setText(_translate("Form", "Set value", None))
+        #self.pushButton_2.setText(_translate("Form","Exit", None))
         #self.pushButton.clicked.connect(self.close)
         self.pushButton.clicked.connect(self.OK)
+
         self.label.setText(_translate("Form", "choose n:", None))
+        self.label_2.setText(_translate("Form", "Lo:", None))
+        self.label_3.setText(_translate("Form", str("You can choose an area("+ "1-"+ str(L)+")to discover, below:"), None))
+        self.label_4.setText(_translate("Form", "deltaL:", None))
+        self.radioButton.setText(_translate("Form", "Whole", None))
+        self.radioButton_2.setText(_translate("Form", "Slice", None))
+        self.spinBox_2.setEnabled(False)
+        self.spinBox_3.setEnabled(False)
+        self.radioButton_2.clicked.connect(self.enableOrDisable)
+        self.radioButton.clicked.connect(self.enableOrDisable)
+
+
+    def enableOrDisable(self):
+        if self.radioButton.isChecked():
+            self.spinBox_2.setEnabled(False)
+            self.spinBox_3.setEnabled(False)
+        elif self.radioButton_2.isChecked():
+            self.spinBox_2.setEnabled(True)
+            self.spinBox_3.setEnabled(True)
+
+
 
 
 
 
     def OK(self, event):
         #value = [int(item) for item in self.spinBox.value()]
-        global N
+        global N, startIn, finishIn
         value =  self.spinBox.value()
+        value1 = self.spinBox_2.value()
+        value2  = self.spinBox_3.value()
         N = value
+        startIn = value1
+        finishIn = value2
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Information)
         stringer= str("You succesfully choose N=" + str(N))
@@ -361,6 +443,8 @@ class Ui_MainWindow(object):
         if filename:
             text = open(filename).read()
             self.originalText = text.decode("utf-8")
+            global L
+            L = len(self.originalText)
             self.splitText(self.originalText)
             #print(self.originalText)
 
@@ -397,13 +481,16 @@ class Ui_MainWindow(object):
 
     #This fuction open pop up where you have to choose "N"
     def open_n_Popup(self):
+        print(len(self.originalText))
         self.popup = QDialog()
         self.popup.ui = Ui_Form()
         self.popup.ui.setupUi(self.popup)
         self.popup.setAttribute(QtCore.Qt.WA_DeleteOnClose)
         self.popup.exec_()
-        global N
+        global N, startIn, finishIn
         self.n = N
+        self.startIn = startIn
+        self.finishIn = finishIn
 
 
     #this function split text into n-gramms and run waterflow functions which
@@ -411,7 +498,12 @@ class Ui_MainWindow(object):
     def splitText(self, text):
         self.open_n_Popup()
         #print(text)
-        splittedText = textwrap.wrap(text.decode('utf8'), self.n)
+        if self.startIn !=0 and self.finishIn!=0:
+            slicedtext = text[startIn:startIn+finishIn]
+            print(slicedtext)
+        else:
+            slicedtext = text
+        splittedText = textwrap.wrap(slicedtext.decode('utf8'), self.n)
         #print(splittedText)
         self.readyText = splittedText
         #here caled waterflow functions for tab1
@@ -525,7 +617,10 @@ class Ui_MainWindow(object):
         #print len(values)
         indexes = np.arange(len(result))
         bar_width = 0.35
-        plt.bar(indexes, result)
+        #here1
+        for i in range(1,len(result)):
+            result[i] = math.log10(result[i])
+        plt.bar(indexes[1::], result[1::])
         #histogram, bin_edges = np.histogram(values, bins = 10)
         #plt.bar(histogram,bin_edges[:-1], width = 0.35)
         #print(bin_edges)
@@ -618,7 +713,8 @@ class Ui_MainWindow(object):
         iteration_x = []
         iteration_y = self.big_P_x
         for i in range(len(self.big_P_x)):
-            iteration_x.append(i)
+            iteration_x.append(math.log10(i+1))
+            iteration_y[i] = math.log10(iteration_y[i])
         x = iteration_x
         y = iteration_y
 
@@ -664,8 +760,8 @@ class Ui_MainWindow(object):
                     summary+=1
             result.append(summary)
         for item in range(len(result)):
-            result[item] = result[item]/sum(result)
-        self.p_pad3 = result
+            result[item] = result[item]/sum(self.newWordsText)
+        self.p_pad3 = sorted(result, reverse = True)
         self.get_P_tab3()
 
 
@@ -759,16 +855,29 @@ class Ui_MainWindow(object):
 
             #indexes = np.arange(len(labels))
             bar_width = 0.35
-            plt.bar(resultin, result, width = bar_width)
+            #   here2
+            newRes = []
+            newInd = []
+            for i in range(len(result)):
+                if result[i] != 0:
+                    newRes.append(math.log10(result[i]))
+                    newInd.append(i)
+
+            plt.bar(newInd, newRes, width = bar_width)
             # add labels
             #plt.xticks(indexes + bar_width, labels)
             plt.show()
         elif self.radioButton_4.isChecked():
             iteration_x = []
             iteration_y = self.P_pad3
+            print(iteration_y)
             for i in range(len(self.P_pad3)):
-                iteration_x.append(i)
-            x =  iteration_x
+                if iteration_y[i] != 0:
+                    iteration_x.append(math.log10(i+1))
+                    iteration_y[i] = math.log10(iteration_y[i])
+                else:
+                    iteration_x.append(i)
+            x = iteration_x
             #x = [math.log10(item) for item in iteration_x]
 
             y =  iteration_y
@@ -781,7 +890,11 @@ class Ui_MainWindow(object):
             iteration_x = []
             iteration_y = self.p_pad3
             for i in range(len(self.p_pad3)):
-                iteration_x.append(i)
+                if iteration_y[i] != 0:
+                    iteration_x.append(math.log10(i+1))
+                    iteration_y[i] = math.log10(iteration_y[i])
+                else:
+                    iteration_x.append(i)
             x = iteration_x
             y = iteration_y
 
@@ -835,11 +948,10 @@ class Ui_MainWindow(object):
     def fillTableTab2(self):
         self.tableWidget_2.setRowCount(len(self.result_tap_2)-1)
         summary = sum(self.result_tap_2)
-        print(summary)
         for itemRow in range(0,len(self.result_tap_2)):
             if self.setTab2 == False:
                 item0 = QTableWidgetItem()
-                item0.setData(Qt.DisplayRole, itemRow + 1)
+                item0.setData(Qt.DisplayRole, itemRow)
                 item1 = QTableWidgetItem()
                 #item1.setText(str(self.result_tap_2[itemRow]))
                 item1.setData(Qt.DisplayRole, self.result_tap_2[itemRow])
@@ -868,10 +980,11 @@ class Ui_MainWindow(object):
             iteration_x = []
             iteration_y = self.result_tap_2
             for i in range(len(self.result_tap_2)):
-                iteration_x.append(i)
             #    x = [math.log10(item) for item in iteration_x]
-            x = iteration_x
+                iteration_x.append(math.log10(i+1))
+                iteration_y[i] = math.log10(iteration_y[i])
             y = iteration_y
+            x = iteration_x
 
             plt.plot(x, y, 'k', marker='o')
             plt.grid(color='b', linestyle='-', linewidth=0.5)
@@ -879,10 +992,11 @@ class Ui_MainWindow(object):
         elif self.radioButton_2.isChecked():
             iteration_x = []
             iteration_y = self.result_P_tap_2
-            for i in range(len(self.result_P_tap_2)):
-                iteration_x.append(i)
-            x = iteration_x
-            y = iteration_y
+            for i in range(1,len(self.result_P_tap_2)):
+                iteration_x.append(math.log10(i))
+                iteration_y[i] = math.log10(iteration_y[i])
+            x = iteration_x[1::]
+            y = iteration_y[1::]
 
             plt.plot(x, y, 'k', marker='o')
             plt.grid(color='b', linestyle='-', linewidth=0.5)
