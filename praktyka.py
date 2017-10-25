@@ -441,6 +441,7 @@ class Ui_MainWindow(object):
     def openDialog(self):
         filename = QtGui.QFileDialog.getOpenFileName()
         if filename:
+            filename = unicode(filename, "utf-8")
             text = open(filename).read()
             self.originalText = text.decode("utf-8")
             global L
@@ -453,6 +454,7 @@ class Ui_MainWindow(object):
     def file_save(self):
         #name = QtGui.QFileDialog.getSaveFileName( self.setupUi(self), 'Save File')
         name = QtGui.QFileDialog.getSaveFileName()
+        name = unicode(name, "utf-8")
         self.file1 = open(name + ":AnalysisSymbol", 'w' )
         self.file2 = open(name + ":dti", 'w' )
         self.file3 = open(name + ":Ti", 'w' )
@@ -712,11 +714,13 @@ class Ui_MainWindow(object):
     def buildGrahTab4(self):
         iteration_x = []
         iteration_y = self.big_P_x
-        for i in range(len(self.big_P_x)):
-            iteration_x.append(math.log10(i+1))
-            iteration_y[i] = math.log10(iteration_y[i])
+        newArrayY = []
+        for i in range(1,len(self.big_P_x)):
+            if iteration_y[i] != 0:
+                iteration_x.append(math.log10(i))
+                newArrayY.append(math.log10(iteration_y[i]))
         x = iteration_x
-        y = iteration_y
+        y = newArrayY
 
         plt.plot(x, y, 'k', marker = 'o')
         plt.grid(color='b', linestyle='-', linewidth=0.5)
@@ -870,17 +874,16 @@ class Ui_MainWindow(object):
         elif self.radioButton_4.isChecked():
             iteration_x = []
             iteration_y = self.P_pad3
-            print(iteration_y)
+            newRes = []
+            newInd = []
             for i in range(len(self.P_pad3)):
                 if iteration_y[i] != 0:
-                    iteration_x.append(math.log10(i+1))
-                    iteration_y[i] = math.log10(iteration_y[i])
-                else:
-                    iteration_x.append(i)
-            x = iteration_x
+                    newInd.append(math.log10(i+1))
+                    newRes.append(math.log10(iteration_y[i]))
+            x = newInd
             #x = [math.log10(item) for item in iteration_x]
 
-            y =  iteration_y
+            y =  newRes
 
             plt.plot(x, y, 'k',  marker='o')
             plt.grid(color='b', linestyle='-', linewidth=0.5)
@@ -889,14 +892,13 @@ class Ui_MainWindow(object):
         elif self.radioButton_3.isChecked():
             iteration_x = []
             iteration_y = self.p_pad3
+            newArrayY = []
             for i in range(len(self.p_pad3)):
                 if iteration_y[i] != 0:
                     iteration_x.append(math.log10(i+1))
-                    iteration_y[i] = math.log10(iteration_y[i])
-                else:
-                    iteration_x.append(i)
+                    newArrayY.append(math.log10(iteration_y[i]))
             x = iteration_x
-            y = iteration_y
+            y = newArrayY
 
             plt.plot(x, y, 'k',  marker='o')
             plt.grid(color='b', linestyle='-', linewidth=0.5)
@@ -979,12 +981,14 @@ class Ui_MainWindow(object):
         if self.radioButton.isChecked():
             iteration_x = []
             iteration_y = self.result_tap_2
-            for i in range(len(self.result_tap_2)):
+            newArrayX = []
+            newArrayY = []
+            for i in range(1, len(self.result_tap_2)):
             #    x = [math.log10(item) for item in iteration_x]
-                iteration_x.append(math.log10(i+1))
-                iteration_y[i] = math.log10(iteration_y[i])
-            y = iteration_y
-            x = iteration_x
+                newArrayX.append(math.log10(i))
+                newArrayY.append(math.log10(iteration_y[i]))
+            y = newArrayY
+            x = newArrayX
 
             plt.plot(x, y, 'k', marker='o')
             plt.grid(color='b', linestyle='-', linewidth=0.5)
@@ -992,11 +996,13 @@ class Ui_MainWindow(object):
         elif self.radioButton_2.isChecked():
             iteration_x = []
             iteration_y = self.result_P_tap_2
+            newArrayY = []
+            newArrayX = []
             for i in range(1,len(self.result_P_tap_2)):
-                iteration_x.append(math.log10(i))
-                iteration_y[i] = math.log10(iteration_y[i])
-            x = iteration_x[1::]
-            y = iteration_y[1::]
+                newArrayX.append(math.log10(i))
+                newArrayY.append(math.log10(iteration_y[i]))
+            x = newArrayX
+            y = newArrayY
 
             plt.plot(x, y, 'k', marker='o')
             plt.grid(color='b', linestyle='-', linewidth=0.5)
