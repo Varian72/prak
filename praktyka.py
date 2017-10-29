@@ -21,6 +21,7 @@ from operator import itemgetter
 from collections import Counter
 import numpy as np
 import matplotlib.pyplot as plt
+from collections import defaultdict
 
 
 
@@ -44,9 +45,11 @@ N = 1
 global L
 global startIn
 global finishIn
+global isSliced
 
 startIn = 0
 finishIn = 100
+isSliced = False
 
 class Ui_Form(object):
 
@@ -150,13 +153,17 @@ class Ui_Form(object):
 
     def OK(self, event):
         #value = [int(item) for item in self.spinBox.value()]
-        global N, startIn, finishIn
+        global N, startIn, finishIn , isSliced
         value =  self.spinBox.value()
         value1 = self.spinBox_2.value()
         value2  = self.spinBox_3.value()
         N = value
         startIn = value1
         finishIn = value2
+        if self.radioButton_2.isChecked():
+            isSliced = True
+        else:
+            isSliced = False
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Information)
         stringer= str("You succesfully choose N=" + str(N))
@@ -491,21 +498,19 @@ class Ui_MainWindow(object):
         self.popup.ui.setupUi(self.popup)
         self.popup.setAttribute(QtCore.Qt.WA_DeleteOnClose)
         self.popup.exec_()
-        global N, startIn, finishIn
+        global N, startIn, finishIn ,isSliced
         self.n = N
         self.startIn = startIn
         self.finishIn = finishIn
+        self.isSliced = isSliced
 
 
     #this function split text into n-gramms and run waterflow functions which
     # fill tables
     def splitText(self, text):
         self.open_n_Popup()
-        #print(text)
-        print(self.startIn,self.finishIn)
-        if self.startIn >= 0 and self.finishIn!=0:
+        if self.isSliced:
             slicedtext = text[self.startIn:self.startIn + self.finishIn]
-            print(len(slicedtext))
         else:
             slicedtext = text
         slicedtext = slicedtext.decode('utf8')
@@ -660,7 +665,17 @@ class Ui_MainWindow(object):
         readyItems = []
         binaryItems = []
         binaryItems.append(1)
-        for index in range(1,len(self.readyText)):
+        item = 1
+        #for item in range(1, len( self.readyText)):
+        while item < len(self.readyText):
+            try:
+                result = self.readyText[:item].index(self.readyText[item])
+                item+=1
+                binaryItems.append(0)
+            except ValueError:
+                item+=1
+                binaryItems.append(1)
+            """
             count = 0
             for item in range(len(readyItems)):
                 if readyItems[item] == self.readyText[index]:
@@ -670,6 +685,12 @@ class Ui_MainWindow(object):
                 binaryItems.append(1)
             else:
                 binaryItems.append(0)
+        binaryItems = defaultdict(list)
+        for i,item in enumerate(self.readyText):
+            binaryItems[item].append(i)
+        binaryItems = {k:v for k,v in binaryItems.items() if len(v)>1}
+        print(binaryItems)
+        """
         self.newWordsText = binaryItems
         self.buildTable4()
 
