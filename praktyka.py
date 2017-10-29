@@ -11,11 +11,13 @@ sys.setdefaultencoding('UTF8')
 from PyQt4 import QtCore, QtGui
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
+from itertools import izip, islice, tee
 
 import textwrap
 
 import os
 import math
+from operator import itemgetter
 from collections import Counter
 import numpy as np
 import matplotlib.pyplot as plt
@@ -195,6 +197,7 @@ class Ui_MainWindow(object):
     #firstpad
     table1Array = []
     tab1Flag =  False
+    generalOne = []
 
     #for tab4
     newWordsText = ""
@@ -483,7 +486,6 @@ class Ui_MainWindow(object):
 
     #This fuction open pop up where you have to choose "N"
     def open_n_Popup(self):
-        print(len(self.originalText))
         self.popup = QDialog()
         self.popup.ui = Ui_Form()
         self.popup.ui.setupUi(self.popup)
@@ -500,13 +502,16 @@ class Ui_MainWindow(object):
     def splitText(self, text):
         self.open_n_Popup()
         #print(text)
-        if self.startIn !=0 and self.finishIn!=0:
-            slicedtext = text[startIn:startIn+finishIn]
-            print(slicedtext)
+        print(self.startIn,self.finishIn)
+        if self.startIn >= 0 and self.finishIn!=0:
+            slicedtext = text[self.startIn:self.startIn + self.finishIn]
+            print(len(slicedtext))
         else:
             slicedtext = text
-        splittedText = textwrap.wrap(slicedtext.decode('utf8'), self.n)
-        #print(splittedText)
+        slicedtext = slicedtext.decode('utf8')
+        splittedText = []
+        for item in range(len(slicedtext)- self.n):
+            splittedText.append(slicedtext[item:item+self.n])
         self.readyText = splittedText
         #here caled waterflow functions for tab1
         self.table1()
@@ -532,6 +537,9 @@ class Ui_MainWindow(object):
         output = [0] * len(valuesF)
         for i, x in enumerate(sorted(range(len(valuesF)), key=lambda y: valuesF[y], reverse = True)):
             output[x] = i+1
+
+        if self.setTab1 == False:
+            temporaryGeneral = []
         for itemRow in range(0,len(valuesF)):
             if self.setTab1 == False:
                 item0 = QTableWidgetItem()
@@ -546,8 +554,9 @@ class Ui_MainWindow(object):
                 self.tableWidget.setItem(itemRow, 1, item1)
                 self.tableWidget.setItem(itemRow, 2, item2)
                 self.tableWidget.setItem(itemRow, 3, item3)
+                temporaryGeneral.append([output[itemRow],labels[itemRow],valuesF[itemRow],values_f[itemRow]])
             else:
-                self.file1.write(str(str(output[itemRow]) + '\t' + str(labels[itemRow])+ '\t' + str(valuesF[itemRow])+'\t' + str( values_f[itemRow]))+'\n')
+                self.file1.write(str(str(self.generalOne[itemRow][0]) + '\t' + str(self.generalOne[itemRow][1])+ '\t' + str(self.generalOne[itemRow][2])+'\t' + str(self.generalOne[itemRow][3]))+'\n')
             #compose into list of list in order to sort in func below
             #if len(self.table1Array) != len(valuesF):
             #    self.table1Array.append([itemRow, labels[itemRow], valuesF[itemRow], values_f[itemRow]])
@@ -555,7 +564,9 @@ class Ui_MainWindow(object):
         #for itemRow in range(0,len(valuesF)):
         #    item0 = QTableWidgetItem()
             #item0.setData(Qt.DisplayRole, )
-        if self.setTab1 == True:
+        if self.setTab1 == False:
+            self.generalOne = sorted(temporaryGeneral, key=itemgetter(0))
+        else:
             self.file1.close()
         self.setTab1 = False
         self.tab1Flag = True
